@@ -7,7 +7,7 @@
     <meta name="keywords" content="fuel, consumption, calculator">
     <meta name="author" content="Blaž Oražem">
 
-    <title>Demo</title>
+    <title>Fuel Consumption Calculator</title>
 
     <link rel="shortcut icon" href="images/fuel.png">
     <link rel="stylesheet" href="css/bootstrap.min.css">
