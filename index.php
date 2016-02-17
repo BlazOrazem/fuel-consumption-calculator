@@ -9,7 +9,7 @@
 
     <title>Fuel Consumption Calculator</title>
 
-    <link rel="shortcut icon" href="images/fuel.png">
+    <link rel="shortcut icon" href="images/favicon.png">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-switch.min.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
