@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <meta name="description" content="Calculate your travel expenses with Fuel Consumption Calculator."/>
+    <meta name="description" content="Calculate your travel expenses in SI, HR, RS or BA."/>
     <meta name="keywords" content="fuel, consumption, calculator">
     <meta name="author" content="Blaž Oražem">
 
@@ -126,7 +126,7 @@
                 var distance = parseFloat(this.distance.replace(',','.'));
                 var consumption = parseFloat(this.consumption.replace(',','.'));
 
-                return distance * consumption / 100;
+                return parseFloat(distance * consumption / 100).toFixed(2);
             },
             resultPrice: function() {
                 var priceList = <?php echo(getPriceList(true)); ?>;
@@ -151,30 +151,33 @@
 
                 this.currency = priceList[this.country]['currency'];
 
-                return this.resultDistance * price;
+                if (!price) {
+                    price = 0;
+                }
+
+                return parseFloat(this.resultDistance * price).toFixed(2);
             },
             resultPriceEur: function() {
                 var conversion = 1;
 
                 if (this.currency == 'HRK') {
-                    conversion = 7.62169458;
+                    conversion = <?php echo(getConversionFor('HRK')); ?>;
                 }
                 if (this.currency == 'RSD') {
-                    conversion = 122.223858;
+                    conversion = <?php echo(getConversionFor('RSD')); ?>;
                 }
                 if (this.currency == 'KM') {
-                    conversion = 1.95583;
+                    conversion = <?php echo(getConversionFor('BAM')); ?>;
                 }
 
-                return this.resultPrice / conversion;
+                return parseFloat(this.resultPrice / conversion).toFixed(2);
             }
         }
     });
 </script>
 
 <?php
-    function getPriceList($json = false)
-    {
+    function getPriceList($json = false) {
         $priceList = array();
         $xml = simplexml_load_file('http://www.petrol.eu/api/fuel_prices.xml');
 
@@ -193,6 +196,22 @@
         }
 
         return $json ? json_encode($priceList) : $priceList;
+    }
+
+    function getConversionFor($currency) {
+        $xml = simplexml_load_file('https://www.nlb.si/services/tecajnica/?type=individuals&format=xml');
+
+        foreach ($xml->rates->Rate as $item) {
+            if ($item->CCu == strtoupper($currency)) {
+                return (format($item->Buy) + format($item->Sell)) / 2;
+            }
+        }
+
+        return 1;
+    }
+
+    function format($number) {
+        return str_replace(',', '.', (string)$number);
     }
 ?>
 
