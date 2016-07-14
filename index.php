@@ -29,7 +29,7 @@
 <div class="container">
     <header>
         <h1>Fuel Consumption Calculator</h1>
-        <p class="lead">Calculate your travel expenses.</p>
+        <p class="lead">Calculate your travel expenses in SI, HR, RS or BA.</p>
     </header>
     <div id="fuel" class="row">
         <div class="col col-md-6 col-md-offset-3">
@@ -72,7 +72,10 @@
                         <input type="radio" name="fuel" v-model="fuel" class="fuel-type" value="diesel">
                         <input type="radio" name="fuel" v-model="fuel" class="fuel-type" value="lpg">
                     </div>
-                    <div class="col-xs-12 deviate-top"><hr></div>
+                    <div class="col-xs-12 deviate-top">
+                        <p class="text-center"><small>Fuel prices are parsed from Petrol - a Slovenian energy company.</small></p>
+                        <hr>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="inputComputedConsumption" class="control-label text-left col-md-3 col-sm-3 col-xs-5">Consumption</label>
@@ -95,9 +98,13 @@
                     </div>
                     <label class="control-label text-left col-md-2 col-sm-2 col-xs-2">EUR</label>
                 </div>
+                <div class="col-xs-12"><hr></div>
             </form>
         </div>
     </div>
+    <footer>
+        <p class="text-center">&copy; <a href="http://www.webarea.eu" target="_blank">Webarea.eu</a> 2016. All right reserved.</p>
+    </footer>
 </div>
 
 <script src="js/vue.js"></script>
