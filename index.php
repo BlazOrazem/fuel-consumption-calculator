@@ -2,25 +2,16 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <meta name="description" content="Calculate your travel expenses in SI, HR, RS or BA."/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Easily calculate fuel travel expenses in different countries based on the latest fuel prices.">
     <meta name="keywords" content="fuel, consumption, calculator">
     <meta name="author" content="Blaž Oražem">
 
     <title>Fuel Consumption Calculator</title>
 
     <link rel="shortcut icon" href="images/favicon.png">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-switch.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/styles.css" />
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -28,199 +19,127 @@
 
 <div class="container">
     <header>
-        <h1>Fuel Consumption Calculator</h1>
-        <p class="lead">Calculate your travel expenses in SI, HR, RS or BA.</p>
+        <h1 class="font-weight-bold">Fuel Consumption Calculator</h1>
+        <p class="lead pt-2">Calculate your fuel travel expenses easily.</p>
     </header>
-    <div id="fuel" class="row">
-        <div class="col col-md-6 col-md-offset-3">
-            <form class="form-horizontal">
-                <div class="form-group deviate-bottom-none">
-                    <label for="inputCountry" class="control-label col-sm-2">Country</label>
-                    <div class="col-sm-10">
-                        <select class="form-control" id="inputCountry" v-model="country">
-                            <?php foreach(getPriceList() as $key => $country): ?>
-                                <option value="<?php echo($key); ?>" <?php if($key == 'Slovenia'): echo('selected'); endif; ?>>
-                                    <?php echo($key); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="col-xs-12"><hr></div>
-                </div>
-                <div class="form-group">
-                    <div class="col col-md-6">
-                        <label for="inputDistance" class="control-label">Distance (km)</label>
-                        <input type="text" class="form-control deviate-top" id="inputDistance" v-model="distance">
-                    </div>
-                    <div class="col col-md-6">
-                        <label for="inputConsumption" class="control-label avg-consumption">Avg. consumption (L/100km)</label>
-                        <input type="text" class="form-control deviate-top" id="inputConsumption" v-model="consumption">
-                    </div>
-                </div>
-                <div class="form-group text-center">
-                    <div class="btn-group deviate-top fuel-type">
-                        <button type="button" data-switch-set="size" data-switch-value="95" data-fuel="95" class="btn btn-default active">Normal 95</button>
-                        <button type="button" data-switch-set="size" data-switch-value="98" data-fuel="98" class="btn btn-default">Normal 98</button>
-                        <button type="button" data-switch-set="size" data-switch-value="100" data-fuel="100" class="btn btn-default">Super 100</button>
-                        <button type="button" data-switch-set="size" data-switch-value="diesel" data-fuel="diesel" class="btn btn-default">Diesel</button>
-                        <button type="button" data-switch-set="size" data-switch-value="lpg" data-fuel="lpg" class="btn btn-default">LPG</button>
-                    </div>
-                    <div class="btn-group hidden">
-                        <input type="radio" name="fuel" v-model="fuel" class="fuel-type" value="95" checked>
-                        <input type="radio" name="fuel" v-model="fuel" class="fuel-type" value="98">
-                        <input type="radio" name="fuel" v-model="fuel" class="fuel-type" value="100">
-                        <input type="radio" name="fuel" v-model="fuel" class="fuel-type" value="diesel">
-                        <input type="radio" name="fuel" v-model="fuel" class="fuel-type" value="lpg">
-                    </div>
-                    <div class="col-xs-12 deviate-top">
-                        <p class="text-center"><small>Fuel prices are parsed from Petrol - a Slovenian energy company.</small></p>
-                        <hr>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputComputedConsumption" class="control-label text-left col-md-3 col-sm-3 col-xs-5">Consumption</label>
-                    <div class="col-md-7 col-sm-7 col-xs-5">
-                        <input type="text" class="form-control" id="inputComputedConsumption" v-model="resultDistance">
-                    </div>
-                    <label class="control-label text-left col-md-2 col-sm-2 col-xs-2">L</label>
-                </div>
-                <div class="form-group">
-                    <label for="inputComputedPrice" class="control-label text-left col-md-3 col-sm-3 col-xs-5">Price</label>
-                    <div class="col-md-7 col-sm-7 col-xs-5">
-                        <input type="text" class="form-control" id="inputComputedPrice" v-model="resultPrice">
-                    </div>
-                    <label class="control-label text-left col-md-2 col-sm-2 col-xs-2">{{ currency }}</label>
-                </div>
-                <div class="form-group">
-                    <label for="inputComputedPriceEur" class="control-label text-left col-md-3 col-sm-3 col-xs-5">Price</label>
-                    <div class="col-md-7 col-sm-7 col-xs-5">
-                        <input type="text" class="form-control" id="inputComputedPriceEur" v-model="resultPriceEur">
-                    </div>
-                    <label class="control-label text-left col-md-2 col-sm-2 col-xs-2">EUR</label>
-                </div>
-                <div class="col-xs-12"><hr></div>
-            </form>
-        </div>
-    </div>
-    <footer>
-        <p class="text-center">&copy; <a href="http://www.webarea.eu" target="_blank">Webarea.eu</a> 2016. All right reserved.</p>
-    </footer>
 </div>
 
-<script src="js/vue.js"></script>
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-switch.min.js"></script>
+<div id="fuel" class="container">
+    <div class="row justify-content-lg-center pt-3">
+        <div class="col col-lg-6">
+            <div class="form-group row results">
+                <div class="col col-sm-6 col-xs-12">
+                    <div class="row">
+                        <label for="inputCountry" class="col-4 col-form-label text-right font-weight-bold">
+                            Country
+                        </label>
+                        <div class="col-8">
+                            <select class="form-control" id="inputCountry" v-model="country" v-on:change="calculate()">
+                                <option value="Austria">Austria</option>
+                                <option value="Bosnia-and-Herzegovina">Bosnia and Herzegovina</option>
+                                <option value="Croatia">Croatia</option>
+                                <option value="Germany">Germany</option>
+                                <option value="Hungary">Hungary</option>
+                                <option value="Italy">Italy</option>
+                                <option value="Slovenia" selected>Slovenia</option>
+                                <option value="Serbia">Serbia</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xs-12 btn-group btn-group-toggle">
+                    <label class="btn btn-info active" data-fuel="gasoline">
+                        <input type="radio" name="fuel" autocomplete="off" value="gasoline" v-model="fuel" v-on:change="calculate()" checked> Gasoline
+                    </label>
+                    <label class="btn btn-info" data-fuel="diesel">
+                        <input type="radio" name="fuel" autocomplete="off" value="diesel" v-model="fuel" v-on:change="calculate()"> Diesel
+                    </label>
+                    <label class="btn btn-info" data-fuel="lpg">
+                        <input type="radio" name="fuel" autocomplete="off" value="lpg" v-model="fuel" v-on:change="calculate()"> LPG
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-lg-center small-hide pt-2">
+        <div class="col col-lg-3">
+            <label for="inputDistance" class="control-label font-weight-bold">Distance <small>(km)</small></label>
+            <input type="text" class="form-control" id="inputDistance" placeholder="enter distance, eg. 125,5" v-model="distance">
+        </div>
+        <div class="col col-lg-3">
+            <label for="inputConsumption" class="control-label font-weight-bold">Avg. consumption <small>(L/100km)</small></label>
+            <input type="text" class="form-control" id="inputConsumption" placeholder="enter consumption, eg. 7,4" v-model="consumption">
+        </div>
+    </div>
+    <div class="row justify-content-lg-center pt-3">
+        <div class="col col-lg-6">
+            <p class="text-center mb-0">
+                <small>
+                    Fuel prices are parsed from <a href="https://www.globalpetrolprices.com" target="_blank">globalpetrolprices.com</a>.
+                </small>
+            </p>
+        </div>
+    </div>
+    <div class="row justify-content-lg-center">
+        <div class="col col-lg-6">
+            <hr>
+        </div>
+    </div>
+    <div class="row justify-content-lg-center pt-3">
+        <div class="col col-lg-6">
+            <div class="form-group row results">
+                <label for="calculatedConsumption" class="col-4 col-form-label text-right font-weight-bold">
+                    Consumption
+                </label>
+                <div class="col-6">
+                    <input type="text" class="form-control text-right" id="calculatedConsumption" v-model="resultConsumption" readonly>
+                </div>
+                <label class="col-2 col-form-label font-weight-bold">L</label>
+            </div>
+            <div class="form-group row results">
+                <label for="calculatedPriceEur" class="col-4 col-form-label text-right font-weight-bold">
+                    Price
+                </label>
+                <div class="col-6">
+                    <input type="text" class="form-control text-right" id="calculatedPriceEur" v-model="resultPriceEur" readonly>
+                </div>
+                <label class="col-2 col-form-label font-weight-bold">EUR</label>
+            </div>
+            <div class="form-group row results mb-3">
+                <label for="calculatedPrice" class="col-4 col-form-label text-right font-weight-bold">
+                    Price <small>(regional)</small>
+                </label>
+                <div class="col-6">
+                    <input type="text" class="form-control text-right" id="calculatedPrice" v-model="resultPrice" readonly>
+                </div>
+                <label class="col-2 col-form-label font-weight-bold">{{ currency }}</label>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-lg-center">
+        <div class="col col-lg-6">
+            <hr>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p class="text-center">
+        &copy; <a href="https://www.orazem.si" target="_blank">Orazem.si</a> <?= date('Y') ?>. All rights reserved.
+    </p>
+    <p class="text-center">
+        <i class="github-icon"></i>
+        <a href="https://github.com/BlazOrazem/fuel-consumption-calculator" target="_blank">
+            Fuel Consumption Calculator on Github.
+        </a>
+    </p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 <script src="js/app.js"></script>
-
-<script>
-    new Vue({
-        el: '#fuel',
-
-        data: {
-            country: '',
-            distance: '',
-            consumption: '',
-            fuel: '',
-            resultDistance: '',
-            resultPrice: '',
-            resultPriceEur: '',
-            currency: 'EUR'
-        },
-
-        computed: {
-            resultDistance: function() {
-                var distance = parseFloat(this.distance.replace(',','.'));
-                var consumption = parseFloat(this.consumption.replace(',','.'));
-
-                return parseFloat(distance * consumption / 100).toFixed(2);
-            },
-            resultPrice: function() {
-                var priceList = <?php echo(getPriceList(true)); ?>;
-
-                var price = 0;
-
-                if (this.fuel == '95') {
-                    price = priceList[this.country]['fuelType']['95'];
-                }
-                if (this.fuel == '98') {
-                    price = priceList[this.country]['fuelType']['98'];
-                }
-                if (this.fuel == '100') {
-                    price = priceList[this.country]['fuelType']['100'];
-                }
-                if (this.fuel == 'diesel') {
-                    price = priceList[this.country]['fuelType']['diesel'];
-                }
-                if (this.fuel == 'lpg') {
-                    price = priceList[this.country]['fuelType']['lpg'];
-                }
-
-                this.currency = priceList[this.country]['currency'];
-
-                if (!price) {
-                    price = 0;
-                }
-
-                return parseFloat(this.resultDistance * price).toFixed(2);
-            },
-            resultPriceEur: function() {
-                var conversion = 1;
-
-                if (this.currency == 'HRK') {
-                    conversion = <?php echo(getConversionFor('HRK')); ?>;
-                }
-                if (this.currency == 'RSD') {
-                    conversion = <?php echo(getConversionFor('RSD')); ?>;
-                }
-                if (this.currency == 'KM') {
-                    conversion = <?php echo(getConversionFor('BAM')); ?>;
-                }
-
-                return parseFloat(this.resultPrice / conversion).toFixed(2);
-            }
-        }
-    });
-</script>
-
-<?php
-    function getPriceList($json = false) {
-        $priceList = array();
-        $xml = simplexml_load_file('http://www.petrol.eu/api/fuel_prices.xml');
-
-        foreach ($xml as $item) {
-            $country = (string)$item->attributes()->label;
-            if ($country == 'Kosovo') {
-                continue;
-            }
-            $priceList[$country] = array();
-            foreach ($item->fuel as $fuel) {
-                $fuelType = (string)$fuel->attributes()->type;
-                $priceList[$country]['currency'] = (string)$fuel->priceType->price->attributes()->currency;
-                $priceList[$country]['updated'] = (string)$fuel->priceType->attributes()->updated;
-                $priceList[$country]['fuelType'][$fuelType] = (string)$fuel->priceType->price;
-            }
-        }
-
-        return $json ? json_encode($priceList) : $priceList;
-    }
-
-    function getConversionFor($currency) {
-        $xml = simplexml_load_file('https://www.nlb.si/services/tecajnica/?type=individuals&format=xml');
-
-        foreach ($xml->rates->Rate as $item) {
-            if ($item->CCu == strtoupper($currency)) {
-                return (format($item->Buy) + format($item->Sell)) / 2;
-            }
-        }
-
-        return 1;
-    }
-
-    function format($number) {
-        return str_replace(',', '.', (string)$number);
-    }
-?>
 
 </body>
 </html>
