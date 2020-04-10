@@ -15,6 +15,7 @@ new Vue({
         consumption: '',
         resultConsumption: 0,
         resultPriceEur: 0,
+        resultPricePerUnitEur: 0,
         resultPrice: 0,
         currency: 'EUR',
         timer: null
@@ -60,6 +61,7 @@ new Vue({
                     this.resultConsumption = this.calculateConsumption(),
                     this.resultPriceEur = this.calculatePrice(response.data.default.price),
                     this.resultPrice = this.calculatePrice(response.data.regional.price),
+                    this.resultPricePerUnitEur = response.data.default.price,
                     this.currency = response.data.regional.currency,
                     loading.stop()
                 })

@@ -98,14 +98,14 @@
             </div>
             <div class="form-group row results">
                 <label for="calculatedPriceEur" class="col-4 col-form-label text-right font-weight-bold">
-                    Price
+                    Price total
                 </label>
                 <div class="col-6">
                     <input type="text" class="form-control text-right" id="calculatedPriceEur" v-model="resultPriceEur" readonly>
                 </div>
                 <label class="col-2 col-form-label font-weight-bold">EUR</label>
             </div>
-            <div class="form-group row results mb-3">
+            <div class="form-group row results">
                 <label for="calculatedPrice" class="col-4 col-form-label text-right font-weight-bold">
                     Price <small>(regional)</small>
                 </label>
@@ -113,6 +113,15 @@
                     <input type="text" class="form-control text-right" id="calculatedPrice" v-model="resultPrice" readonly>
                 </div>
                 <label class="col-2 col-form-label font-weight-bold">{{ currency }}</label>
+            </div>
+            <div class="form-group row results mb-3">
+                <label for="calculatedPricePerUnitEur" class="col-4 col-form-label text-right font-weight-bold">
+                    Price per unit
+                </label>
+                <div class="col-6">
+                    <input type="text" class="form-control text-right" id="calculatedPricePerUnitEur" v-model="resultPricePerUnitEur" readonly>
+                </div>
+                <label class="col-2 col-form-label font-weight-bold">EUR / L</label>
             </div>
         </div>
     </div>
