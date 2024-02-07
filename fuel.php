@@ -17,6 +17,7 @@ if (
         'Austria',
         'Bosnia-and-Herzegovina',
         'Croatia',
+        'France',
         'Germany',
         'Hungary',
         'Italy',
@@ -27,34 +28,46 @@ if (
     die('No data');
 }
 
-$result = [];
-$page = file_get_contents('https://www.globalpetrolprices.com/' . $_GET['country'] . '/' . $_GET['fuel'] . '_prices/');
-$parse = phpQuery::newDocumentHTML($page);
-$parse = phpQuery::newDocumentHTML($parse->find('#graphPageLeft > table:first > tbody')->html());
+$result = [
+    'date'     => date('d.m.Y'),
+    'default'  => [
+        'currency' => 'USD',
+        'price'    => 0,
+    ],
+    'regional' => [
+        'currency' => 'EUR',
+        'price'    => 0,
+    ],
+];
 
-foreach ($parse['tr'] as $row) {
-    $currency = cleanString(pq($row)->find('th:first')->html());
-    $value = trim(pq($row)->find('td:first')->html());
+$page = file_get_contents('https://www.globalpetrolprices.com/' . $_GET['country'] . '/');
+$parsedPage = phpQuery::newDocumentHTML($page);
+$head = phpQuery::newDocumentHTML($parsedPage->find('#graphPageLeft > table:first > thead')->html());
+$body = phpQuery::newDocumentHTML($parsedPage->find('#graphPageLeft > table:first > tbody')->html());
 
-    if ($currency == 'EUR') {
-        $result['default'] = [
-            'currency' => $currency,
-            'price'    => $value,
-        ];
+// Parse regional currency
+$counter = 0;
+foreach ($head['td'] as $cell) {
+    $counter++;
+
+    if ($counter === 3) {
+        $result['regional']['currency'] = pq($cell)->html();
     }
+}
 
-    if (!in_array($currency, ['EUR', 'USD'])) {
-        $result['regional'] = [
-            'currency' => $currency,
-            'price'    => $value,
-        ];
-    }
+// Parse fuel prices
+$counter = 0;
+foreach ($body['tr'] as $row) {
+    $counter++;
+    $result['date'] = cleanString(pq($row)->find('td.value:eq(0)')->html());
 
-    if (!isset($result['regional'])) {
-        $result['regional'] = [
-            'currency' => $currency,
-            'price'    => $value,
-        ];
+    if (
+        ($_GET['fuel'] == 'gasoline' && $counter === 1) ||
+        ($_GET['fuel'] == 'diesel' && $counter === 2) ||
+        ($_GET['fuel'] == 'lpg' && $counter === 3)
+    ) {
+        $result['regional']['price'] = cleanString(pq($row)->find('td.value:eq(1)')->html());
+        $result['default']['price'] = cleanString(pq($row)->find('td.value:eq(2)')->html());
     }
 }
 

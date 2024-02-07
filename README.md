@@ -13,7 +13,7 @@ Fuel prices are parsed from [globalpetrolprices.com](https://www.globalpetrolpri
 ## Result
 
 * Calculated overall consumption in liters (L) based on given parameters
-* Calculated cost of total consumption in EUR currency
+* Calculated cost of total consumption in USD currency
 * Calculated cost of total consumption in regional currency
 
 ## Used dependencies
@@ -30,7 +30,7 @@ Visit https://fuel.webarea.eu for demo.
 
 ## Author
 
-Blaž Oražem, www.orazem.si
+Blaž Oražem, [orazem.si](https://orazem.si)
 
 ## License
 

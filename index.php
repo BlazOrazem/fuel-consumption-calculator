@@ -38,6 +38,7 @@
                                 <option value="Austria">Austria</option>
                                 <option value="Bosnia-and-Herzegovina">Bosnia and Herzegovina</option>
                                 <option value="Croatia">Croatia</option>
+                                <option value="France">France</option>
                                 <option value="Germany">Germany</option>
                                 <option value="Hungary">Hungary</option>
                                 <option value="Italy">Italy</option>
@@ -103,7 +104,7 @@
                 <div class="col-6">
                     <input type="text" class="form-control text-right" id="calculatedPriceEur" v-model="resultPriceEur" readonly>
                 </div>
-                <label class="col-2 col-form-label font-weight-bold">EUR</label>
+                <label class="col-2 col-form-label font-weight-bold">USD</label>
             </div>
             <div class="form-group row results">
                 <label for="calculatedPrice" class="col-4 col-form-label text-right font-weight-bold">
@@ -121,12 +122,17 @@
                 <div class="col-6">
                     <input type="text" class="form-control text-right" id="calculatedPricePerUnitEur" v-model="resultPricePerUnitEur" readonly>
                 </div>
-                <label class="col-2 col-form-label font-weight-bold">EUR / L</label>
+                <label class="col-2 col-form-label font-weight-bold">{{ currency }} / L</label>
             </div>
         </div>
     </div>
     <div class="row justify-content-lg-center">
         <div class="col col-lg-6">
+            <p class="text-center mb-0" v-if="date">
+                <small>
+                    Prices were updated on {{ date }}.
+                </small>
+            </p>
             <hr>
         </div>
     </div>
@@ -134,7 +140,7 @@
 
 <footer>
     <p class="text-center">
-        &copy; <a href="https://www.orazem.si" target="_blank">Orazem.si</a> <?= date('Y') ?>. All rights reserved.
+        &copy; <a href="https://orazem.si" target="_blank">Orazem.si</a> <?= date('Y') ?>. All rights reserved.
     </p>
     <p class="text-center">
         <i class="github-icon"></i>
